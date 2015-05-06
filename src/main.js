@@ -80,9 +80,7 @@ Formsy.Form = React.createClass({
 
     event && event.preventDefault();
 
-    // Trigger form as not pristine.
-    // If any inputs have not been touched yet this will make them dirty
-    // so validation becomes visible (if based on isPristine)
+    this.validateForm();
     this.setFormPristine(false);
     this.updateModel();
     var model = this.mapModel();
