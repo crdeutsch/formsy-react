@@ -16,13 +16,13 @@ Formsy.addValidationRule = function (name, func) {
 };
 
 Formsy.Form = React.createClass({
-  getInitialState: function () {
-    return {
-      isValid: true,
-      isSubmitting: false,
-      canChange: false
-    };
+  internalState: {
+    isValid: true,
+    isSubmitting: false,
+    canChange: false,
+    formSubmitted: false
   },
+
   getDefaultProps: function () {
     return {
       onSuccess: function () {},
@@ -85,7 +85,7 @@ Formsy.Form = React.createClass({
     this.updateModel();
     var model = this.mapModel();
     this.props.onSubmit(model, this.resetModel, this.updateInputsWithError);
-    this.state.isValid ? this.props.onValidSubmit(model, this.resetModel, this.updateInputsWithError) : this.props.onInvalidSubmit(model, this.resetModel, this.updateInputsWithError);
+    this.internalState.isValid ? this.props.onValidSubmit(model, this.resetModel, this.updateInputsWithError) : this.props.onInvalidSubmit(model, this.resetModel, this.updateInputsWithError);
 
   },
 
@@ -192,9 +192,7 @@ Formsy.Form = React.createClass({
     var inputs = this.inputs;
     var inputKeys = Object.keys(inputs);
 
-    this.setState({
-        _formSubmitted: !isPristine
-    })
+    this.internalState.formSubmitted = !isPristine;
 
     // Iterate through each component and set it as pristine
     // or "dirty".
@@ -212,7 +210,7 @@ Formsy.Form = React.createClass({
   validate: function (component) {
 
     // Trigger onChange
-    if (this.state.canChange) {
+    if (this.internalState.canChange) {
       this.props.onChange(this.getCurrentValues());
     }
 
@@ -344,9 +342,7 @@ Formsy.Form = React.createClass({
         }
       }.bind(this));
 
-      this.setState({
-        isValid: allIsValid
-      });
+      this.internalState.isValid = allIsValid;
 
       if (allIsValid) {
         this.props.onValid();
@@ -355,9 +351,7 @@ Formsy.Form = React.createClass({
       }
 
       // Tell the form that it can start to trigger change events
-      this.setState({
-        canChange: true
-      });
+      this.internalState.canChange = true;
 
     }.bind(this);
 
@@ -380,9 +374,7 @@ Formsy.Form = React.createClass({
     // If there are no inputs, set state where form is ready to trigger
     // change event. New inputs might be added later
     if (!inputKeys.length && this.isMounted()) {
-      this.setState({
-        canChange: true
-      });
+      this.internalState.canChange = true;
     }
   },
 
