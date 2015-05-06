@@ -100,14 +100,17 @@ Formsy.Form = React.createClass({
   updateModel: function () {
     Object.keys(this.inputs).forEach(function (name) {
       var component = this.inputs[name];
-      this.model[name] = component.state._value;
+      this.model[name] = component.getValue();
     }.bind(this));
   },
 
   // Reset each key in the model to the original / initial value
   resetModel: function () {
     Object.keys(this.inputs).forEach(function (name) {
-      this.inputs[name].resetValue();
+      // resetValue function may or may not exist depending on if component implemented it
+      if (this.inputs[name].resetValue) {
+        this.inputs[name].resetValue();
+      }
     }.bind(this));
     this.validateForm();
   },
@@ -182,7 +185,7 @@ Formsy.Form = React.createClass({
   getCurrentValues: function () {
     return Object.keys(this.inputs).reduce(function (data, name) {
       var component = this.inputs[name];
-      data[name] = component.state._value;
+      data[name] = component.getValue();
       return data;
     }.bind(this), {});
   },
@@ -234,7 +237,7 @@ Formsy.Form = React.createClass({
     var currentValues = this.getCurrentValues();
     var validationErrors = component.props.validationErrors;
     var validationError = component.props.validationError;
-    value = arguments.length === 2 ? value : component.state._value;
+    value = arguments.length === 2 ? value : component.getValue();
 
     var validationResults = this.runRules(value, currentValues, component._validations);
     var requiredResults = this.runRules(value, currentValues, component._requiredValidations);
@@ -390,7 +393,7 @@ Formsy.Form = React.createClass({
   // itself to the form
   attachToForm: function (component) {
     this.inputs[component.props.name] = component;
-    this.model[component.props.name] = component.state._value;
+    this.model[component.props.name] = component.getValue();
     this.validate(component);
   },
 

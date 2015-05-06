@@ -32,11 +32,10 @@ var convertValidationsToObject = function (validations) {
 module.exports = {
   getInitialState: function () {
     return {
-      _value: this.props.value,
       _isRequired: false,
       _isValid: true,
       _isPristine: true,
-      _pristineValue: this.props.value,
+      _pristineValue: this.getValue(),
       _validationError: '',
       _externalError: null,
       _formSubmitted: false
@@ -76,15 +75,6 @@ module.exports = {
     this.setValidations(nextProps.validations, nextProps.required);
   },
 
-  componentDidUpdate: function (prevProps) {
-
-    // If the value passed has changed, set it. If value is not passed it will
-    // internally update, and this will never run
-    if (!utils.isSame(this.props.value, prevProps.value)) {
-      this.setValue(this.props.value);
-    }
-  },
-
   // Detach it when component unmounts
   componentWillUnmount: function () {
     this.props._detachFromForm(this);
@@ -98,28 +88,8 @@ module.exports = {
 
   },
 
-  // We validate after the value has been set
-  setValue: function (value) {
-    this.setState({
-      _value: value,
-      _isPristine: false
-    }, function () {
-      this.props._validate(this);
-    }.bind(this));
-  },
-  resetValue: function () {
-    this.setState({
-      _value: this.state._pristineValue,
-      _isPristine: true
-    }, function () {
-      this.props._validate(this);
-    });
-  },
-  getValue: function () {
-    return this.state._value;
-  },
   hasValue: function () {
-    return this.state._value !== '';
+    return this.getValue() !== '';
   },
   getErrorMessage: function () {
     return !this.isValid() || this.showRequired() ? (this.state._externalError || this.state._validationError) : null;
