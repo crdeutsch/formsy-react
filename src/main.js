@@ -333,28 +333,6 @@ Formsy.Form = React.createClass({
     var inputs = this.inputs;
     var inputKeys = Object.keys(inputs);
 
-    // We need a callback as we are validating all inputs again. This will
-    // run when the last component has set its state
-    var onValidationComplete = function () {
-      inputKeys.forEach(function (name) {
-        if (!inputs[name].state._isValid) {
-          allIsValid = false;
-        }
-      }.bind(this));
-
-      this.internalState.isValid = allIsValid;
-
-      if (allIsValid) {
-        this.props.onValid();
-      } else {
-        this.props.onInvalid();
-      }
-
-      // Tell the form that it can start to trigger change events
-      this.internalState.canChange = true;
-
-    }.bind(this);
-
     // Run validation again in case affected by other inputs. The
     // last component validated will run the onValidationComplete callback
     inputKeys.forEach(function (name, index) {
@@ -363,19 +341,27 @@ Formsy.Form = React.createClass({
       if (validation.isValid && component.state._externalError) {
         validation.isValid = false;
       }
+      if (!validation.isValid) {
+        allIsValid = false;
+      }
       component.setState({
         _isValid: validation.isValid,
         _isRequired: validation.isRequired,
         _validationError: validation.error,
         _externalError: !validation.isValid && component.state._externalError ? component.state._externalError : null
-      }, index === inputKeys.length - 1 ? onValidationComplete : null);
+      });
     }.bind(this));
 
-    // If there are no inputs, set state where form is ready to trigger
-    // change event. New inputs might be added later
-    if (!inputKeys.length && this.isMounted()) {
-      this.internalState.canChange = true;
+    this.internalState.isValid = allIsValid;
+
+    if (allIsValid) {
+      this.props.onValid();
+    } else {
+      this.props.onInvalid();
     }
+
+    // Tell the form that it can start to trigger change events
+    this.internalState.canChange = true;
   },
 
   // Method put on each input component to register
