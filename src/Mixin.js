@@ -34,7 +34,7 @@ module.exports = {
     return {
       _isRequired: false,
       _isValid: true,
-      _defaultValue: this.props.defaultValue,
+      _defaultValue: this.props.defaultValue || '',
       _validationError: '',
       _externalError: null,
       _formSubmitted: false
