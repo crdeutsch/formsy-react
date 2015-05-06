@@ -34,7 +34,7 @@ module.exports = {
     return {
       _isRequired: false,
       _isValid: true,
-      _pristineValue: this.getValue(),
+      _defaultValue: this.props.defaultValue,
       _validationError: '',
       _externalError: null,
       _formSubmitted: false
@@ -100,7 +100,7 @@ module.exports = {
     return this.state._isValid;
   },
   isPristine: function () {
-    return this.getValue() === this.state._pristineValue;
+    return this.getValue() === this.state._defaultValue;
   },
   isFormSubmitted: function () {
     return this.state._formSubmitted;
