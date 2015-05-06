@@ -50,7 +50,7 @@ Formsy.Form = React.createClass({
   },
 
   componentWillUpdate: function () {
-    
+
     // Keep a reference to input keys before form updates,
     // to check if inputs has changed after render
     this.prevInputKeys = Object.keys(this.inputs);
@@ -58,7 +58,7 @@ Formsy.Form = React.createClass({
   },
 
   componentDidUpdate: function () {
-    
+
     if (this.props.validationErrors) {
       this.setInputValidationErrors(this.props.validationErrors);
     }
@@ -203,8 +203,7 @@ Formsy.Form = React.createClass({
     inputKeys.forEach(function (name, index) {
       var component = inputs[name];
       component.setState({
-        _formSubmitted: !isPristine,
-        _isPristine: isPristine
+        _formSubmitted: !isPristine
       });
     }.bind(this));
   },
