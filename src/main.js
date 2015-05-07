@@ -369,7 +369,6 @@ Formsy.Form = React.createClass({
   attachToForm: function (component) {
     this.inputs[component.props.name] = component;
     this.model[component.props.name] = component.getValue();
-    this.validate(component);
   },
 
   // Method put on each input component to unregister

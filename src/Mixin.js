@@ -48,25 +48,16 @@ module.exports = {
   },
 
   componentWillMount: function () {
-    var configure = function () {
-      this.setValidations(this.props.validations, this.props.isRequired);
-      this.props._attachToForm(this);
-    }.bind(this);
-
     if (!this.props.name) {
       throw new Error('Form Input requires a name property when used');
     }
 
     if (!this.props._attachToForm) {
-      return setTimeout(function () {
-        if (!this.isMounted()) return;
-        if (!this.props._attachToForm) {
-          throw new Error('Form Mixin requires component to be nested in a Form');
-        }
-        configure();
-      }.bind(this), 0);
+      throw new Error('Form Mixin requires component to be nested in a Form');
     }
-    configure();
+
+    this.setValidations(this.props.validations, this.props.isRequired);
+    this.props._attachToForm(this);
   },
 
   // We have to make the validate method is kept when new props are added
