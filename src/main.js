@@ -46,7 +46,7 @@ Formsy.Form = React.createClass({
   },
 
   componentDidMount: function () {
-    this.validateForm();
+    this.validate();
   },
 
   componentWillUpdate: function () {
@@ -65,7 +65,7 @@ Formsy.Form = React.createClass({
 
     var newInputKeys = Object.keys(this.inputs);
     if (utils.arraysDiffer(this.prevInputKeys, newInputKeys)) {
-      this.validateForm();
+      this.validate();
     }
 
   },
@@ -80,7 +80,7 @@ Formsy.Form = React.createClass({
 
     event && event.preventDefault();
 
-    this.validateForm();
+    this.validate();
     this.setFormPristine(false);
     this.updateModel();
     var model = this.mapModel();
@@ -110,7 +110,7 @@ Formsy.Form = React.createClass({
         this.inputs[name].resetValue();
       }
     }.bind(this));
-    this.validateForm();
+    this.validate();
   },
 
   setInputValidationErrors: function (errors) {
@@ -160,9 +160,9 @@ Formsy.Form = React.createClass({
       if (child.props && child.props.name) {
 
         return React.cloneElement(child, {
+          validate: this.validateComponent,
           _attachToForm: this.attachToForm,
           _detachFromForm: this.detachFromForm,
-          _validate: this.validate,
           _isFormDisabled: this.isFormDisabled,
           _isValidValue: function (component, value) {
             return this.runValidation(component, value).isValid;
@@ -207,7 +207,7 @@ Formsy.Form = React.createClass({
   // Use the binded values and the actual input value to
   // validate the input and set its state. Then check the
   // state of the form itself
-  validate: function (component) {
+  validateComponent: function (component) {
 
     // Trigger onChange
     if (this.internalState.canChange) {
@@ -222,7 +222,7 @@ Formsy.Form = React.createClass({
       _showRequired: validation.isRequired,
       _validationError: validation.error,
       _externalError: null
-    }, this.validateForm);
+    }, this.validate);
 
   },
 
@@ -328,7 +328,7 @@ Formsy.Form = React.createClass({
 
   // Validate the form by going through all child input components
   // and check their state
-  validateForm: function () {
+  validate: function () {
     var allIsValid = true;
     var inputs = this.inputs;
     var inputKeys = Object.keys(inputs);
