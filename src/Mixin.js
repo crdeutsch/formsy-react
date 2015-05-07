@@ -32,7 +32,7 @@ var convertValidationsToObject = function (validations) {
 module.exports = {
   getInitialState: function () {
     return {
-      _isRequired: false,
+      _showRequired: false,
       _isValid: true,
       _defaultValue: this.props.defaultValue || '',
       _validationError: '',
@@ -49,7 +49,7 @@ module.exports = {
 
   componentWillMount: function () {
     var configure = function () {
-      this.setValidations(this.props.validations, this.props.required);
+      this.setValidations(this.props.validations, this.props.isRequired);
       this.props._attachToForm(this);
     }.bind(this);
 
@@ -71,7 +71,7 @@ module.exports = {
 
   // We have to make the validate method is kept when new props are added
   componentWillReceiveProps: function (nextProps) {
-    this.setValidations(nextProps.validations, nextProps.required);
+    this.setValidations(nextProps.validations, nextProps.isRequired);
   },
 
   // Detach it when component unmounts
@@ -79,11 +79,11 @@ module.exports = {
     this.props._detachFromForm(this);
   },
 
-  setValidations: function (validations, required) {
+  setValidations: function (validations, isRequired) {
 
     // Add validations to the store itself as the props object can not be modified
     this._validations = convertValidationsToObject(validations) || {};
-    this._requiredValidations = required === true ? {isDefaultRequiredValue: true} : convertValidationsToObject(required);
+    this._requiredValidations = isRequired === true ? {isDefaultRequiredValue: true} : convertValidationsToObject(isRequired);
 
   },
 
@@ -106,10 +106,10 @@ module.exports = {
     return this.state._formSubmitted;
   },
   isRequired: function () {
-    return !!this.props.required;
+    return !!this.props.isRequired;
   },
   showRequired: function () {
-    return this.state._isRequired;
+    return this.state._showRequired;
   },
   showError: function () {
     return !this.showRequired() && !this.isValid();

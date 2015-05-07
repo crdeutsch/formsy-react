@@ -219,7 +219,7 @@ Formsy.Form = React.createClass({
     // the validator IF there is a value or it is required
     component.setState({
       _isValid: validation.isValid,
-      _isRequired: validation.isRequired,
+      _showRequired: validation.isRequired,
       _validationError: validation.error,
       _externalError: null
     }, this.validateForm);
@@ -346,7 +346,7 @@ Formsy.Form = React.createClass({
       }
       component.setState({
         _isValid: validation.isValid,
-        _isRequired: validation.isRequired,
+        _showRequired: validation.isRequired,
         _validationError: validation.error,
         _externalError: !validation.isValid && component.state._externalError ? component.state._externalError : null
       });
