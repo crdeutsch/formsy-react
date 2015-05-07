@@ -199,6 +199,7 @@ Formsy.Form = React.createClass({
     inputKeys.forEach(function (name, index) {
       var component = inputs[name];
       component.setState({
+        _isPristine: isPristine,
         _formSubmitted: !isPristine
       });
     }.bind(this));
@@ -220,6 +221,7 @@ Formsy.Form = React.createClass({
     component.setState({
       _isValid: validation.isValid,
       _showRequired: validation.isRequired,
+      _isPristine: validation.isPristine,
       _validationError: validation.error,
       _externalError: null
     }, this.validate);
@@ -248,6 +250,7 @@ Formsy.Form = React.createClass({
     return {
       isRequired: isRequired,
       isValid: isRequired ? false : isValid,
+      isPristine: !component.state._isPristine ? false : value === component.state._defaultValue,
       error: (function () {
 
         if (isValid && !isRequired) {
@@ -347,6 +350,7 @@ Formsy.Form = React.createClass({
       component.setState({
         _isValid: validation.isValid,
         _showRequired: validation.isRequired,
+        _isPristine: validation.isPristine,
         _validationError: validation.error,
         _externalError: !validation.isValid && component.state._externalError ? component.state._externalError : null
       });
