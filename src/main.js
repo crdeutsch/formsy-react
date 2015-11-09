@@ -1,4 +1,4 @@
-var React = global.React || require('react');
+var React = require('react');
 var Formsy = {};
 var validationRules = require('./validationRules.js');
 var utils = require('./utils.js');
@@ -395,9 +395,5 @@ Formsy.Form = React.createClass({
 
   }
 });
-
-if (!global.exports && !global.module && (!global.define || !global.define.amd)) {
-  global.Formsy = Formsy;
-}
 
 module.exports = Formsy;
