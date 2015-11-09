@@ -78,15 +78,18 @@ Formsy.Form = React.createClass({
   // Update model, submit to url prop and send the model
   submit: function (event) {
 
-    event && event.preventDefault();
+    if (event) event.preventDefault();
 
     this.validate();
     this.setFormPristine(false);
     this.updateModel();
     var model = this.mapModel();
     this.props.onSubmit(model, this.resetModel, this.updateInputsWithError);
-    this.internalState.isValid ? this.props.onValidSubmit(model, this.resetModel, this.updateInputsWithError) : this.props.onInvalidSubmit(model, this.resetModel, this.updateInputsWithError);
-
+    if (this.internalState.isValid) {
+      this.props.onValidSubmit(model, this.resetModel, this.updateInputsWithError);
+    } else {
+      this.props.onInvalidSubmit(model, this.resetModel, this.updateInputsWithError);
+    }
   },
 
   mapModel: function () {
@@ -296,8 +299,9 @@ Formsy.Form = React.createClass({
           throw new Error('Formsy does not have the validation rule: ' + validationMethod);
         }
 
+        var validation;
         if (typeof validations[validationMethod] === 'function') {
-          var validation = validations[validationMethod](currentValues, value);
+          validation = validations[validationMethod](currentValues, value);
           if (typeof validation === 'string') {
             results.errors.push(validation);
             results.failed.push(validationMethod);
@@ -307,7 +311,7 @@ Formsy.Form = React.createClass({
           return;
 
         } else if (typeof validations[validationMethod] !== 'function') {
-          var validation = validationRules[validationMethod](currentValues, value, validations[validationMethod]);
+          validation = validationRules[validationMethod](currentValues, value, validations[validationMethod]);
           if (typeof validation === 'string') {
             results.errors.push(validation);
             results.failed.push(validationMethod);
@@ -387,8 +391,7 @@ Formsy.Form = React.createClass({
 
     return React.DOM.form({
         onSubmit: this.submit,
-        className: this.props.className,
-        method: method
+        className: this.props.className
       },
       this.traverseChildrenAndRegisterInputs(this.props.children)
     );
