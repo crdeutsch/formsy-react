@@ -391,7 +391,8 @@ Formsy.Form = React.createClass({
 
     return React.DOM.form({
         onSubmit: this.submit,
-        className: this.props.className
+        className: this.props.className,
+        method: method
       },
       this.traverseChildrenAndRegisterInputs(this.props.children)
     );
